@@ -1,0 +1,8 @@
+<Context>
+    <!--jdbc连接需要设置时区，否则会出错，大小写敏感！Asia/Shanghai或者GMT方式-->
+    <!--xml文件里‘&’非法，需要变为‘&amp;’-->
+    <Resource name="jdbc/javaee" auth="Container" type="javax.sql.DataSource"
+              maxActive="50" maxIdle="30" maxWait="10000" logAbandoned="true"
+              username="root" password="31415926" driverClassName="com.mysql.cj.jdbc.Driver"
+              url="jdbc:mysql://localhost:3306/db?characterEncoding=UTF8&amp;serverTimezone=Asia/Shanghai&amp;useSSL=false"/>
+</Context>
