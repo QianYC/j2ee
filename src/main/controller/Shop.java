@@ -3,7 +3,10 @@ package controller;
 import model.Cart;
 import model.ProductList;
 import service.ProductService;
+import util.EJBHandler;
 
+import javax.ejb.EJB;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,11 +26,16 @@ import java.util.Enumeration;
 
 @WebServlet("/shop")
 public class Shop extends HttpServlet {
-
-    private ProductService productService = null;
+    @EJB
+    private ProductService productService;
 
     public void init(){
-        productService = ProductService.getInstance();
+//        productService = ProductService.getInstance();
+//        try {
+//            productService = (ProductService) EJBHandler.getBean("ProductServiceImpl!service.ProductService");
+//        } catch (NamingException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)

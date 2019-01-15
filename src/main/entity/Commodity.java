@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 /**
  * @ClassName: Commodity
  * @Description: TODO
@@ -16,7 +18,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Commodity {
+public class Commodity implements Serializable {
     private String name;
     private double price;
 

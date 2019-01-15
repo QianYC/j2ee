@@ -3,6 +3,7 @@ package model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.Map;
  */
 @Getter
 @Setter
-public class Cart {
+public class Cart implements Serializable {
     private double total;
     private List<CartItem> items = new ArrayList<CartItem>();
 

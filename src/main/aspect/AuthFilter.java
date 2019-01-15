@@ -30,9 +30,10 @@ public class AuthFilter implements Filter {
         System.out.println("filter " + ((HttpServletRequest) servletRequest).getRequestURI());
         HttpSession session = ((HttpServletRequest) servletRequest).getSession(false);
         String path = ((HttpServletRequest) servletRequest).getServletPath();
+
         if ((session == null || session.getAttribute("userName") == null)
                 && !path.equals("/index.jsp") && !path.equals("/login")) {
-            session.getServletContext().getRequestDispatcher(((HttpServletResponse) servletResponse)
+            servletRequest.getServletContext().getRequestDispatcher(((HttpServletResponse) servletResponse)
                     .encodeURL(((HttpServletRequest) servletRequest).getContextPath() + "/index.jsp"))
                     .forward(servletRequest, servletResponse);
             System.out.println("[AuthFilter] : 用户未登录");

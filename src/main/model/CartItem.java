@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 /**
  * @ClassName: CartItem
  * @Description: TODO
@@ -16,7 +18,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartItem {
+public class CartItem implements Serializable {
     private String name;
     private int num;
     private double price;

@@ -2,7 +2,10 @@ package controller;
 
 import model.LoginResult;
 import service.UserService;
+import util.EJBHandler;
 
+import javax.ejb.EJB;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,10 +25,16 @@ import java.io.IOException;
 @WebServlet("/login")
 public class Login extends HttpServlet {
 
-    private UserService service = null;
+    @EJB
+    private UserService service;
 
     public void init() {
-        service = UserService.getInstance();
+//        service = UserService.getInstance();
+//        try {
+//            service = (UserService) EJBHandler.getBean("UserServiceImpl!service.UserService");
+//        } catch (NamingException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void doPost(HttpServletRequest request,HttpServletResponse response)
@@ -40,6 +49,7 @@ public class Login extends HttpServlet {
         if (result.getStatus()==LoginResult.SUCCESS) {
             request.setAttribute("loginResult", result);
             session.setAttribute("userName", userName);
+            
             getServletContext().getRequestDispatcher(response.encodeURL(request.getContextPath() + "/home.jsp"))
                     .forward(request, response);
         } else{
