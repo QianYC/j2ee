@@ -2,10 +2,8 @@ package controller;
 
 import model.LoginResult;
 import service.UserService;
-import util.EJBHandler;
 
 import javax.ejb.EJB;
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -28,14 +26,7 @@ public class Login extends HttpServlet {
     @EJB
     private UserService service;
 
-    public void init() {
-//        service = UserService.getInstance();
-//        try {
-//            service = (UserService) EJBHandler.getBean("UserServiceImpl!service.UserService");
-//        } catch (NamingException e) {
-//            e.printStackTrace();
-//        }
-    }
+    public void init() {}
 
     public void doPost(HttpServletRequest request,HttpServletResponse response)
             throws ServletException,IOException {

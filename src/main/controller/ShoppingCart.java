@@ -3,10 +3,8 @@ package controller;
 import model.Cart;
 import model.PurchaseResult;
 import service.PurchaseService;
-import util.EJBHandler;
 
 import javax.ejb.EJB;
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,14 +25,7 @@ public class ShoppingCart extends HttpServlet {
     @EJB
     private PurchaseService service;
     
-    public void init(){
-//        service = PurchaseService.getInstance();
-//        try {
-//            service = (PurchaseService) EJBHandler.getBean("PurchaseServiceImpl!service.PurchaseService");
-//        } catch (NamingException e) {
-//            e.printStackTrace();
-//        }
-    }
+    public void init(){}
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
