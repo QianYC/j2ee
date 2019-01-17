@@ -1,6 +1,10 @@
 package repository;
 
 import entity.User;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import util.HBNUtil;
 import util.JDBCHandler;
 
 import javax.sql.DataSource;
@@ -17,78 +21,32 @@ import java.sql.SQLException;
  * @Version: 0.0.1
  */
 public class UserRepository {
-    private DataSource source = JDBCHandler.getDataSource();
 
     public User getUser(String userName, String password) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        User user = null;
+        Session session = HBNUtil.getSession();
+        Transaction transaction = session.beginTransaction();
+        User user = (User) session.createQuery("from entity.User  where userName=?1 and password=?2")
+                .setParameter(1,userName).setParameter(2,password).getSingleResult();
+        transaction.commit();
 
-        try {
-            connection = source.getConnection();
-            statement = connection.prepareStatement("select * from user where userName=? and password=?;");
-            statement.setString(1, userName);
-            statement.setString(2, password);
-            set = statement.executeQuery();
-            if (set.next()) {
-                user = new User(userName, password, set.getDouble("money"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            JDBCHandler.close(set, statement, connection);
-        }
         return user;
     }
 
     public User getUserByName(String userName) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        User user = null;
-
-        try {
-            connection = source.getConnection();
-            statement = connection.prepareStatement("select * from user where userName=?;");
-            statement.setString(1, userName);
-            set = statement.executeQuery();
-            if (set.next()) {
-                user = new User(userName, null, set.getDouble("money"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            JDBCHandler.close(set, statement, connection);
-        }
-
+        Session session = HBNUtil.getSession();
+        Transaction transaction = session.beginTransaction();
+        User user = (User) session.createQuery("from User u where u.userName=?1")
+                .setParameter(1, userName).getSingleResult();
+        transaction.commit();
         return user;
     }
 
     public double withdraw(String userName, double amount) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet set = null;
-
-        try {
-            connection = source.getConnection();
-            connection.setAutoCommit(false);
-            statement = connection.prepareStatement("update user set money=money-? where userName=?;");
-            statement.setDouble(1, amount);
-            statement.setString(2, userName);
-            statement.executeUpdate();
-            connection.commit();
-            connection.setAutoCommit(true);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
-        } finally {
-            JDBCHandler.close(set, statement, connection);
-        }
+        Session session = HBNUtil.getSession();
+        Transaction transaction = session.beginTransaction();
+        session.createQuery("update User set money=money-?1 where userName=?2")
+                .setParameter(1,amount).setParameter(2,userName).executeUpdate();
+        transaction.commit();
 
         return getUserByName(userName).getMoney();
     }

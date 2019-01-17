@@ -1,6 +1,9 @@
 package repository;
 
 import entity.Commodity;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import util.HBNUtil;
 import util.JDBCHandler;
 
 import javax.sql.DataSource;
@@ -19,27 +22,14 @@ import java.util.List;
  * @Version: 0.0.1
  */
 public class CommodityRepository {
-    private DataSource source = JDBCHandler.getDataSource();
 
-    synchronized public Commodity getCommodityByName(String name) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        Commodity good = null;
-        try {
-            connection = source.getConnection();
-            statement = connection.prepareStatement("select * from commodity where name = ?;");
-            statement.setString(1, name);
-            set = statement.executeQuery();
-            if (set.next()) {
-                good = new Commodity(set.getString("name"), set.getDouble("price"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            JDBCHandler.close(set, statement, connection);
-        }
-        return good;
+    public Commodity getCommodityByName(String name) {
+        Session session = HBNUtil.getSession();
+        Transaction transaction = session.beginTransaction();
+        Commodity commodity = (Commodity) session.createQuery("from Commodity where name=?1")
+                .setParameter(1, name).getSingleResult();
+        transaction.commit();
+        return commodity;
     }
 
     /**
@@ -48,46 +38,22 @@ public class CommodityRepository {
      * @param size
      * @return
      */
-    synchronized public List<Commodity> getCommodities(int page, int size) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        List<Commodity> list = new ArrayList<Commodity>();
-        try {
-            connection = source.getConnection();
-            statement = connection.prepareStatement("select * from commodity limit ?,?;");
-            statement.setInt(1, page-1);
-            statement.setInt(2, size);
-            set = statement.executeQuery();
-            while (set.next()) {
-                Commodity tmp = new Commodity(set.getString("name"), set.getDouble("price"));
-                list.add(tmp);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            JDBCHandler.close(set, statement, connection);
-        }
+    public List<Commodity> getCommodities(int page, int size) {
+        Session session = HBNUtil.getSession();
+        Transaction transaction = session.beginTransaction();
+        List<Commodity> list = session.createQuery("from Commodity")
+                .setFirstResult((page - 1) * size).setMaxResults(size)
+                .getResultList();
+        transaction.commit();
         return list;
     }
 
-    synchronized public int getPages(int size) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet set = null;
-        int count = 0;
-        try {
-            connection = source.getConnection();
-            statement = connection.prepareStatement("select count(*) as count from commodity;");
-            set = statement.executeQuery();
-            if (set.next()) {
-                count = set.getInt("count");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            JDBCHandler.close(set, statement, connection);
-        }
-        return (count - 1) / size + 1;
+    public int getPages(int size) {
+        Session session = HBNUtil.getSession();
+        Transaction transaction = session.beginTransaction();
+        Long count = (Long) HBNUtil.getSession().createQuery("select count(c) from Commodity c")
+                .getSingleResult();
+        transaction.commit();
+        return (int) ((count - 1) / size + 1);
     }
 }

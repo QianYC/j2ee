@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+      <property name="connection.url">jdbc:mysql://localhost:3306/db?serverTimezone=Asia/Shanghai</property>
+      <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+      <property name="connection.username">root</property>
+      <property name="connection.password">31415926</property>
+      <!--select dialect-->
+      <property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>
+      <!--show sql-->
+      <property name="show_sql">true</property>
+      <!-- DB schema will be updated if needed -->
+      <property name="hbm2ddl.auto">update</property>
+      <!--connection pool-->
+      <property name="c3p0.max_size">20</property>
+      <property name="c3p0.min_size">20</property>
+      <property name="c3p0.timeout">5000</property>
+      <property name="c3p0.max_statements">100</property>
+      <property name="c3p0.idle_test_period">3000</property>
+      <property name="c3p0.acquire_increment">2</property>
+      <!--transaction type-->
+      <property name="current_session_context_class">thread</property>
+
+      <mapping class="entity.User"/>
+      <mapping class="entity.Commodity"/>
+
+  </session-factory>
+</hibernate-configuration>
