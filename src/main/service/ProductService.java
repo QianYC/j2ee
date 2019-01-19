@@ -1,10 +1,11 @@
 package service;
 
-import entity.Commodity;
 import model.ProductList;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import repository.CommodityRepository;
 
-import java.util.List;
+import javax.transaction.Transactional;
 
 /**
  * @ClassName: ProductService
@@ -13,17 +14,21 @@ import java.util.List;
  * @Date: 2018/12/31
  * @Version: 0.0.1
  */
+@Component
+@Transactional
 public class ProductService {
-    private static ProductService service = new ProductService();
+//    private static ProductService service = new ProductService();
+
+    @Autowired
     private CommodityRepository repository = new CommodityRepository();
 
-    private ProductService() {
+//    private ProductService() {
+//
+//    }
 
-    }
-
-    public static ProductService getInstance() {
-        return service;
-    }
+//    public static ProductService getInstance() {
+//        return service;
+//    }
 
     public ProductList getProductList(int page,int size) {
         int maxPage = repository.getPages(size);

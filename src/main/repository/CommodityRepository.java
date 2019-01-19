@@ -2,16 +2,11 @@ package repository;
 
 import entity.Commodity;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import util.HBNUtil;
-import util.JDBCHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,10 +16,14 @@ import java.util.List;
  * @Date: 2018/12/20
  * @Version: 0.0.1
  */
+@Repository
 public class CommodityRepository {
 
+    @Autowired
+    SessionFactory factory;
+
     public Commodity getCommodityByName(String name) {
-        Session session = HBNUtil.getSession();
+        Session session = factory.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         Commodity commodity = (Commodity) session.createQuery("from Commodity where name=?1")
                 .setParameter(1, name).getSingleResult();
@@ -39,7 +38,7 @@ public class CommodityRepository {
      * @return
      */
     public List<Commodity> getCommodities(int page, int size) {
-        Session session = HBNUtil.getSession();
+        Session session = factory.getCurrentSession();
         Transaction transaction = session.beginTransaction();
         List<Commodity> list = session.createQuery("from Commodity")
                 .setFirstResult((page - 1) * size).setMaxResults(size)
@@ -49,9 +48,9 @@ public class CommodityRepository {
     }
 
     public int getPages(int size) {
-        Session session = HBNUtil.getSession();
+        Session session = factory.getCurrentSession();
         Transaction transaction = session.beginTransaction();
-        Long count = (Long) HBNUtil.getSession().createQuery("select count(c) from Commodity c")
+        Long count = (Long) session.createQuery("select count(c) from Commodity c")
                 .getSingleResult();
         transaction.commit();
         return (int) ((count - 1) / size + 1);

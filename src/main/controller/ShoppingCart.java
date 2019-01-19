@@ -2,6 +2,7 @@ package controller;
 
 import model.Cart;
 import model.PurchaseResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import service.PurchaseService;
 
 import javax.servlet.ServletException;
@@ -21,9 +22,12 @@ import java.io.IOException;
  */
 @WebServlet("/cart")
 public class ShoppingCart extends HttpServlet {
+
+    @Autowired
     private PurchaseService service;
-    public void init(){
-        service = PurchaseService.getInstance();
+
+    public void init() {
+//        service = PurchaseService.getInstance();
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -33,8 +37,6 @@ public class ShoppingCart extends HttpServlet {
         assert session != null && cart != null;
         service.calculateCost(cart);
         session.setAttribute("cart", cart);
-//        System.out.println(cart);
-//        System.out.println(cart.getTotal());
 
         getServletContext().getRequestDispatcher(response.encodeURL(request.getContextPath() + "/cart.jsp"))
                 .forward(request, response);

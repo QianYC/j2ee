@@ -1,6 +1,7 @@
 package controller;
 
 import model.LoginResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import service.UserService;
 
 import javax.servlet.ServletException;
@@ -22,10 +23,11 @@ import java.io.IOException;
 @WebServlet("/login")
 public class Login extends HttpServlet {
 
-    private UserService service = null;
+    @Autowired
+    private UserService service;
 
     public void init() {
-        service = UserService.getInstance();
+//        service = UserService.getInstance();
     }
 
     public void doPost(HttpServletRequest request,HttpServletResponse response)

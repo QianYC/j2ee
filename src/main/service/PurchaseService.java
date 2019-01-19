@@ -7,9 +7,12 @@ import entity.User;
 import model.Cart;
 import model.CartItem;
 import model.PurchaseResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import repository.CommodityRepository;
 import repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 
@@ -20,15 +23,19 @@ import java.util.Map;
  * @Date: 2019/1/4
  * @Version: 0.0.1
  */
+@Component
+@Transactional
 public class PurchaseService {
-    private static PurchaseService service = new PurchaseService();
+//    private static PurchaseService service = new PurchaseService();
+    @Autowired
     private CommodityRepository repository = new CommodityRepository();
+    @Autowired
     private UserRepository userRepository = new UserRepository();
-    private PurchaseService(){}
+//    private PurchaseService(){}
 
-    public static PurchaseService getInstance() {
-        return service;
-    }
+//    public static PurchaseService getInstance() {
+//        return service;
+//    }
 
     public void calculateCost(Cart cart) {
         List<CartItem> items = cart.getItems();

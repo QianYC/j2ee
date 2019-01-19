@@ -2,6 +2,7 @@ package controller;
 
 import model.Cart;
 import model.ProductList;
+import org.springframework.beans.factory.annotation.Autowired;
 import service.ProductService;
 
 import javax.servlet.ServletException;
@@ -24,10 +25,11 @@ import java.util.Enumeration;
 @WebServlet("/shop")
 public class Shop extends HttpServlet {
 
-    private ProductService productService = null;
+    @Autowired
+    private ProductService productService;
 
     public void init(){
-        productService = ProductService.getInstance();
+//        productService = ProductService.getInstance();
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
